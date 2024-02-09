@@ -104,7 +104,7 @@ const SignUp = () => {
                   <span className="pl-3">Loading...</span>
                 </>
               ) : (
-                "Sing Up"
+                "Sign Up"
               )}
             </Button>
           </form>
