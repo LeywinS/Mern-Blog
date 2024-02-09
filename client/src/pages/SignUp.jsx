@@ -1,6 +1,49 @@
-import { Button, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 const SignUp = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((oldData) => {
+      return { ...oldData, [id]: value.trim() };
+    });
+    console.log(e.target.id);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.username || !formData.email || !formData.password) {
+      return setErrorMessage("Please fill out all the field");
+    }
+    try {
+      setLoading(true);
+      setErrorMessage(null);
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setLoading(false);
+        return setErrorMessage(data.message);
+      }
+      setLoading(false);
+      if (res.ok) {
+        navigate("/signIn");
+      }
+    } catch (e) {
+      setErrorMessage(e.message);
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center">
@@ -19,25 +62,50 @@ const SignUp = () => {
           </p>
         </div>
         <div className="flex-1">
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div className="">
-              <Label value="Your username" />
-              <TextInput placeholder="username" type="text" id="username" />
-            </div>
-            <div className="">
-              <Label value="Your email" />
+              <Label value="Your username" htmlFor="username" />
               <TextInput
-                placeholder="name@company.com"
-                type="email"
-                id="email"
+                placeholder="username"
+                type="text"
+                onChange={handleChange}
+                id="username"
+                value={formData.username}
               />
             </div>
             <div className="">
-              <Label value="Your password" />
-              <TextInput placeholder="password" type="password" id="password" />
+              <Label value="Your email" htmlFor="email" />
+              <TextInput
+                onChange={handleChange}
+                placeholder="name@company.com"
+                type="email"
+                id="email"
+                value={formData.email}
+              />
             </div>
-            <Button gradientDuoTone="purpleToPink" type="submit">
-              Sign Up
+            <div className="">
+              <Label value="Your password" htmlFor="password" />
+              <TextInput
+                onChange={handleChange}
+                placeholder="password"
+                type="password"
+                id="password"
+                value={formData.password}
+              />
+            </div>
+            <Button
+              gradientDuoTone="purpleToPink"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Spinner size="sm" />
+                  <span className="pl-3">Loading...</span>
+                </>
+              ) : (
+                "Sing Up"
+              )}
             </Button>
           </form>
           <div>
@@ -46,6 +114,11 @@ const SignUp = () => {
               Sign In
             </Link>
           </div>
+          {errorMessage && (
+            <Alert className="mt-5" color="failure">
+              {errorMessage}
+            </Alert>
+          )}
         </div>
       </div>
     </div>
