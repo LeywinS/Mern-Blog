@@ -57,7 +57,7 @@ const SignUp = () => {
             </span>
             Blog
           </Link>
-          <p className="text-sm mt-5">
+          <p className="text-lg mt-5 ">
             Hey this is my first full stack MERN project so Welcome{" "}
           </p>
         </div>
