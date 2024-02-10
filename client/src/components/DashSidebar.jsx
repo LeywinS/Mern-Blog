@@ -21,6 +21,7 @@ function DashSidebar() {
               label={"User"}
               labelColor="dark"
               active={tab === "profile"}
+              as="div" //Pour ne pas avoir l'erreur de 2 lien
             >
               Profile
             </Sidebar.Item>
