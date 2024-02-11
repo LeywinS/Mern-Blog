@@ -5,6 +5,7 @@ import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import morgan from "morgan";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 mongoose
@@ -19,6 +20,7 @@ const app = express();
 
 app.use(json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 app.use("/api/user", userRoutes);
