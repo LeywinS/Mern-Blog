@@ -1,8 +1,13 @@
 import { Button, FileInput, TextInput } from "flowbite-react";
+import { useRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 function CreatePost() {
+  const fileRef = useRef();
+  const handleRef = () => {
+    fileRef.current.click();
+  };
   return (
     <div className="p-3 max-w-3xl min-h-screen mx-auto">
       <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
@@ -22,12 +27,13 @@ function CreatePost() {
           />
         </div>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
-          <FileInput type="file" accept="image/*" />
+          <FileInput type="file" accept="image/*" ref={fileRef} />
           <Button
             type="button"
             gradientDuoTone="purpleToBlue"
             size="sm"
             outline
+            onClick={handleRef}
           >
             Upload Image
           </Button>
