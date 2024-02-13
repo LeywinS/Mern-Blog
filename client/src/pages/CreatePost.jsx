@@ -11,12 +11,51 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 function CreatePost() {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [publishError, setPublishError] = useState(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "",
+    content: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((oldform) => {
+      return { ...oldform, [name]: value };
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("api/post/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      if (!res.ok) {
+        setPublishError(data.message);
+        return;
+      }
+      setPublishError(null);
+      navigate(`/post/${data.slug}`);
+    } catch (error) {
+      setPublishError("Something went wrong");
+    }
+  };
 
   const handleUploadImage = async () => {
     try {
@@ -33,7 +72,7 @@ function CreatePost() {
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(imageUploadProgress);
+
           setImageUploadProgress(progress.toFixed(0));
         },
         (error) => {
@@ -44,8 +83,9 @@ function CreatePost() {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
             setImageUploadProgress(null);
             setImageUploadError(null);
-            setFormData({ formData, imageUrl: downloadUrl });
-            console.log(formData);
+            setFormData((old) => {
+              return { ...old, image: downloadUrl };
+            });
           });
         }
       );
@@ -59,19 +99,27 @@ function CreatePost() {
   return (
     <div className="p-3 max-w-3xl min-h-screen mx-auto">
       <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
             type="text"
+            id="title"
             placeholder="Title required"
             required
             className="flex-1"
+            onChange={handleChange}
+            name="title"
+            value={formData.title}
           />
           <TextInput
             type="text"
-            placeholder="Category space by an   ','"
+            id="category"
+            placeholder="Category space by an space  ' '"
             required
             className="flex-1"
+            onChange={handleChange}
+            name="category"
+            value={formData.category}
           />
         </div>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
@@ -109,10 +157,10 @@ function CreatePost() {
             {imageUploadError}
           </Alert>
         )}
-        {formData.imageUrl ? (
+        {formData.image ? (
           <>
             <img
-              src={formData.imageUrl}
+              src={formData.image}
               alt="upload"
               className="
               top-left
@@ -127,14 +175,21 @@ function CreatePost() {
         )}
 
         <ReactQuill
+          id="body"
           theme="snow"
           placeholder="Write something"
           className="h-72 mb-12 mt-5"
           required
+          name="body"
+          value={formData.content}
+          onChange={(value) => {
+            setFormData({ ...formData, content: value });
+          }}
         />
         <Button type="submit" gradientDuoTone="purpleToPink" outline>
           Publish
         </Button>
+        {publishError && <Alert color="failure">{publishError}</Alert>}
       </form>
     </div>
   );
