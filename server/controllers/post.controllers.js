@@ -1,5 +1,6 @@
 import { errorHandler } from "../utils/error.js";
 import Post from "../models/post.model.js";
+import Comment from "../models/comment.model.js";
 
 export const create = async (req, res, next) => {
   console.log(req.body);

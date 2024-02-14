@@ -1,12 +1,14 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Alert, Button, Textarea } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Comment from "./Comment";
 
 function CommentSection({ postId }) {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [commentError, setCommentError] = useState(null);
+  const [comments, setComments] = useState([]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (comment.length > 200 || comment.length === 0) {
@@ -29,11 +31,26 @@ function CommentSection({ postId }) {
       if (res.ok) {
         setComment("");
         setCommentError(null);
+        setComments([data, ...comments]);
       }
     } catch (error) {
       setCommentError(error.message);
     }
   };
+  useEffect(() => {
+    const getComments = async () => {
+      try {
+        const res = await fetch(`/api/comment/getPostComments/${postId}`);
+        const data = await res.json();
+        setComments(data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getComments();
+  }, [postId]);
+
+  console.log(comments);
 
   return (
     <div className="max-w-4xl mx-auto ">
@@ -87,6 +104,21 @@ function CommentSection({ postId }) {
         <Alert className="mt-5" color="failure">
           {commentError}
         </Alert>
+      )}
+      {comments.length === 0 ? (
+        <p className="text-sm my-5">No comment Yet</p>
+      ) : (
+        <div>
+          <div className="flex mt-5">
+            <p className="">Comments</p>
+            <div className="  border-gray-400 border px-2 ml-2 rounded-sm">
+              <p className="">{comments.length}</p>
+            </div>
+          </div>
+          {comments.map((comment) => {
+            return <Comment key={comment._id} comment={comment} />;
+          })}
+        </div>
       )}
     </div>
   );
