@@ -28,15 +28,12 @@ function DashUsers() {
       console.log(e);
     }
   };
-  const handleDeletePost = async () => {
+  const handleDeleteUser = async () => {
     setShowModal(false);
     try {
-      const res = await fetch(
-        `/api/user/deleteuser/${usersIdToDelete}/${currentUser._id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`/api/user/delete/${usersIdToDelete}`, {
+        method: "DELETE",
+      });
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);
@@ -149,7 +146,7 @@ function DashUsers() {
               Are you sure you want to delete this user?
             </h3>
             <div className="flex justify-between">
-              <Button color="failure" onClick={handleDeletePost}>
+              <Button color="failure" onClick={handleDeleteUser}>
                 Yes i&apos;m sure
               </Button>
               <Button color="gray" onClick={() => setShowModal(false)}>
