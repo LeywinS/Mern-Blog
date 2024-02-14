@@ -55,6 +55,13 @@ function DashSidebar() {
               </Sidebar.Item>
             </Link>
           )}
+          {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=users">
+              <Sidebar.Item active={tab === "users"} icon={HiUser} as="div">
+                Users
+              </Sidebar.Item>
+            </Link>
+          )}
           <Sidebar.Item
             icon={HiArrowSmDown}
             labelColor="dark"
