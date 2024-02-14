@@ -15,7 +15,6 @@ const OAuth = () => {
     provider.setCustomParameters({ prompt: "select_account" });
     try {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
-      console.log(resultsFromGoogle.user);
       const res = await fetch("/api/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -25,9 +24,8 @@ const OAuth = () => {
           googlePhoto: resultsFromGoogle.user.photoURL,
         }),
       });
-      console.log("OKKKKKKKKKKKK AVANT DE RECUPERER LA DATA");
+
       const data = await res.json();
-      console.log("APPRESSSS LA DAATAAAAAAA");
 
       if (res.ok) {
         dispatch(signInSuccess(data));

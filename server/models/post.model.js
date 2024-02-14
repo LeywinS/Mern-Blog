@@ -21,12 +21,10 @@ const postSchema = new Schema(
       default:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXVH58Ln2AEDw3FGnwTr8nSMnqpwNUkZqg9A&s",
     },
-    category: [
-      {
-        type: String,
-        default: "",
-      },
-    ],
+    category: {
+      type: String,
+      default: "",
+    },
     slug: {
       type: String,
       required: true,
