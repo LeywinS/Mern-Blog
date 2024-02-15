@@ -8,6 +8,7 @@ import commentRoutes from "./routes/comment.route.js";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import path from "path";
 dotenv.config();
 
 mongoose
@@ -18,6 +19,8 @@ mongoose
   .catch((e) => {
     console.log("Error !!", e.message);
   });
+
+const __dirname = path.resolve();
 const app = express();
 
 app.use(json());
@@ -29,6 +32,11 @@ app.use("/api/user", userRoutes);
 app.use("/api", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
+app.use(express.static(path.join(__dirname, "/client/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+});
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
