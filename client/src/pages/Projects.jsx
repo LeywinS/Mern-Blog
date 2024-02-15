@@ -2,9 +2,13 @@ const Projects = () => {
   return (
     <>
       <h1 className="text-center text-3xl p-12">
-        No thing for now but we will be there !
+        Nothing for now but we will be there !
       </h1>
-      <img className="" src="I will be there.jpg" alt="Nothin for now" />
+      <img
+        className="mx-auto h-800 mb-10"
+        src="I will be there.jpg"
+        alt="Nothin for now"
+      />
     </>
   );
 };

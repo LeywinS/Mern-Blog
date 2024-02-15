@@ -3,7 +3,7 @@ const About = () => {
     <div className="min-h-screen w-full">
       <div className="flex flex-col items-center justify-center gap-4">
         <h1 className="text-3xl lg:text-4xl mt-5">About My Blog</h1>
-        <div className="text-lg p-5">
+        <div className="text-lg p-5 max-w-screen-lg	">
           <p>
             Hey there! I'm Backs, the creative force steering this little corner
             of the internet I call my blog. A self-professed enthusiast of both
