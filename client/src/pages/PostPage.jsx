@@ -23,12 +23,7 @@ function PostPage() {
           return;
         }
         setPost(data.posts[0]);
-        setPost((post) => {
-          return {
-            ...post,
-            category: ["test1", "test2"],
-          };
-        });
+
         setError(null);
         setLoading(false);
       } catch (error) {
@@ -69,23 +64,21 @@ function PostPage() {
       </h1>
       {post && (
         <div className="flex self-center m-5">
-          {post.category.map((cat) => {
-            return (
-              <Link
-                className="self-center ml-5"
-                to={`/search?category=${post && cat}`}
-                key={cat}
+          {post.category && (
+            <Link
+              className="self-center ml-5"
+              to={`/search?category=${post && post.category}`}
+              key={post.category}
+            >
+              <Button
+                gradientDuoTone="purpleToPink"
+                outline
+                className=" mb-5  border-1"
               >
-                <Button
-                  gradientDuoTone="purpleToPink"
-                  outline
-                  className=" mb-5  border-1"
-                >
-                  {cat}
-                </Button>
-              </Link>
-            );
-          })}
+                {post.category}
+              </Button>
+            </Link>
+          )}
         </div>
       )}
       <img
