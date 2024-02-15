@@ -78,11 +78,7 @@ export default function FooterComponent() {
             <Footer.Icon href="#" icon={BsFacebook} />
             <Footer.Icon href="#" icon={BsDribbble} />
             <Footer.Icon href="https://github.com/LeywinS" icon={BsGithub} />
-            <Footer.Icon
-              href="https://twitter.com/BacksVilta"
-              target="_blank"
-              icon={BsTwitterX}
-            />
+            <Footer.Icon href="#" target="_blank" icon={BsTwitterX} />
             <Footer.Icon href="#" icon={BsInstagram} target="_blank" />
           </div>
         </div>
